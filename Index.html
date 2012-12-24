@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script type="text/javascript" src="Scripts/jquery-1.8.3.js"></script>
+    <script type="text/javascript">
+
+        function showMyVideos(data) {
+            $('#listResults').html('');
+            var feed = data.feed;
+            var entries = feed.entry || [];
+            for (var i = 0; i < entries.length; i++) {
+                var entry = entries[i];
+                var title = entry.title.$t;
+                var link = entry.link[0].href;
+                var id = entry.id.$t.split(':')[3];
+                $('<li>' + title+'</li>').append('<button onclick="ShowVideo(\''+id+'\')" >play</button>').appendTo('#listResults');
+
+                }
+        }
+
+         
+
+        $(document).ready(function () {
+        });
+
+        function OnError(x, y, z, a) {
+            alert(z);
+        }
+
+        function ShowVideo(earlking) {
+            var earl =       "http://www.youtube.com/embed/" + earlking + "?enablejsapi=1&origin=http://example.com";
+            $('#player').attr('src', earl);
+        }
+
+        function GetData() {
+            var terms = $('#searchTerms').val();
+            var query='';
+            var words = terms.split(' ') || [];
+            for (var i = 0; i < words.length; i++) {
+                query += words[i];
+                if (i != ( words.length - 1) )
+                    query += "/";
+            }
+
+            var earl = "http://gdata.youtube.com/feeds/api/videos/-/" + query + "?v=2&alt=json-in-script&format=5";
+
+            var settings = {
+                url:earl, //"http://gdata.youtube.com/feeds/api/videos/-/music/nutcracker/snowflakes?v=2&alt=json-in-script&format=5",
+                //crossDomain: true,
+                dataType: "jsonp",
+                jsonpCallback: "showMyVideos",
+                //contentType: "application/json"
+            };
+
+            $.ajax(settings)
+           .error(OnError)
+           .done(function (data) { })
+           .always(function (huh) { });
+
+        }
+
+
+    </script>
+    <style type="text/css">
+
+        #divResults
+        {
+            height:300px;
+            overflow:scroll;
+        }
+    </style>
+</head>
+<body>
+    <div id="divSearch">
+
+        <input type="text" id="searchTerms" width="300" />
+        <button onclick="GetData()">Search</button>
+    </div>
+    <div id="divResults" >
+        <ul id="listResults">
+
+        </ul>
+
+         
+
+    </div>
+<iframe id="player" type="text/html" width="640" height="390"
+  
+  frameborder="0"></iframe>
+</body>
+</html>
+   <!--// var html = ['<ul>'];
+
+
+            //     $("#divResults").html.append("<ul>");
+
+                //var snippet =[];
+                //snippet.push("<a href='",link,"'>click me</a>");
+                //html.push(snippet.join(''));
+
+            //    var snippet = [];
+            //    snippet.push('<button onclick="ShowVideo()", '">click</button');
+            //    html.push(snippet.join(''));
+
+
+            //    html.push('<li>', title, '</li>');
+            //}
+            //html.push('</ul>');
+            //document.getElementById('divResults').innerHTML = html.join('');
+       -->
