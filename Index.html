@@ -1,8 +1,13 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+     <meta name="viewport" content="width=device-width" />
     <title></title>
     <script type="text/javascript" src="Scripts/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="Scripts/detectmobilebrowser.js"></script>
+    <style type="text/css">
+        
+    </style>
     <script type="text/javascript">
 
         function showMyVideos(data) {
@@ -43,8 +48,11 @@
                     query += "/";
             }
 
-            var earl = "http://gdata.youtube.com/feeds/api/videos/-/" + query + "?v=2&alt=json-in-script&format=5";
+            var isMobile = GetIsMobile();
 
+            var earl = GetQueryUrl(isMobile, query);
+
+        
             var settings = {
                 url:earl, //"http://gdata.youtube.com/feeds/api/videos/-/music/nutcracker/snowflakes?v=2&alt=json-in-script&format=5",
                 //crossDomain: true,
@@ -61,33 +69,94 @@
         }
 
 
+        function GetQueryUrl(isMobile, query) {
+            var earl=null;
+            if (!isMobile)
+                earl = "http://gdata.youtube.com/feeds/api/videos/-/" + query + "?v=2&alt=json-in-script&format=5";
+            else {
+                // get streaming format for mobile
+                earl = "http://gdata.youtube.com/feeds/api/videos/-/" + query + "?v=2&alt=json-in-script&format=1";
+                alert("getting streaming");
+            }
+
+            return earl;
+        }
+
+
+        function GetIsMobile() {
+            var isMobile = false;
+            isMobile = jQuery.browser.mobile;
+            return isMobile;
+        }
+
+
     </script>
     <style type="text/css">
 
         #divResults
         {
-            height:300px;
+            height:200px;
             overflow:scroll;
+        }
+        .editField
+        {
+            width:300px;
         }
     </style>
 </head>
 <body>
-    <div id="divSearch">
-
-        <input type="text" id="searchTerms" width="300" />
+   <!-- <div id="divSearch">
+        <input class="editField" type="text" id="searchTerms"  />
         <button onclick="GetData()">Search</button>
-    </div>
-    <div id="divResults" >
-        <ul id="listResults">
+    </div>-->
 
+
+<div id="page1" data-role="page">
+    <div data-role="content">
+
+        <div data-role="fieldcontain">
+            <fieldset data-role="controlgroup">
+                <label for="searchTerms">
+                    search terms
+                </label>
+                <input id="searchTerms" value="" type="text" placeholder="">
+            </fieldset>
+        </div>
+
+        <a href="#page1" data-role="button" data-theme="e" data-direction="reverse"
+                data-transition="pop" onclick="GetData()">
+         Search
+        </a>
+
+
+   
+
+    <div id="divResults" >
+
+        <ul  id="listResults" data-role="listview" data-inset="true" data-divider-theme="b">
+            <li role="heading" data-role="list-divider">
+                Divider
+            </li>
+            <li data-theme="c">
+                <a href="#" data-transition="slide">
+                    Button
+                </a>
+            </li>
         </ul>
 
-         
 
+
+
+
+        <!--<ul id="listResults">
+        </ul>-->
     </div>
 <iframe id="player" type="text/html" width="640" height="390"
   
   frameborder="0"></iframe>
+
+         </div>
+</div>
 </body>
 </html>
    <!--// var html = ['<ul>'];
